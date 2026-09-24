@@ -439,6 +439,7 @@ class Psychosocial(Scenario):
 
         super().__init__(
             version=self.VERSION,
+            uses_default_adversarial_target=adversarial_chat is None,
             technique_class=PsychosocialTechnique,
             default_dataset_config=DatasetAttackConfiguration(
                 dataset_names=[harm.dataset_name for harm in _SUB_HARMS],
@@ -536,7 +537,7 @@ class Psychosocial(Scenario):
                     )
                 )
         return ScenarioRunSizeEstimate(
-            estimated_attack_count=sum(component.count for component in components),
+            total_attack_count=sum(component.count for component in components),
             components=components,
             datasets=datasets,
             note="Each default sub-harm is planned independently; retries and internal turns are excluded.",

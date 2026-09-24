@@ -113,6 +113,16 @@ class AdaptiveScenario(Scenario):
             scenario_result_id=scenario_result_id,
         )
 
+    @property
+    def uses_default_adversarial_target(self) -> bool:
+        """Whether the adaptive pool includes a technique that uses the shared target."""
+        factories = self._get_attack_technique_factories()
+        return any(
+            factory.uses_default_adversarial_target
+            for technique in self._technique_class.get_all_techniques()
+            if (factory := factories.get(technique.value)) is not None
+        )
+
     def _get_attack_technique_factories(self) -> dict[str, AttackTechniqueFactory]:
         """
         Build factories from the canonical scenario-techniques catalog,
@@ -289,7 +299,7 @@ class AdaptiveScenario(Scenario):
                 "selected seed group."
             )
         return ScenarioRunSizeEstimate(
-            estimated_attack_count=estimated_attack_count,
+            total_attack_count=estimated_attack_count,
             minimum_attack_count=minimum_attack_count,
             maximum_attack_count=maximum_attack_count,
             components=components,
